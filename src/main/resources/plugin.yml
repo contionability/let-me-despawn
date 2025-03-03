@@ -1,0 +1,7 @@
+name: LetMeDespawn
+version: '1.0-SNAPSHOT'
+main: me.contionability.letMeDespawn.LetMeDespawn
+api-version: '1.21'
+load: STARTUP
+authors: [ contionability ]
+description: Let Me Despawn
