@@ -22,7 +22,7 @@ import io.papermc.paper.event.player.PlayerNameEntityEvent
 
 class DespawnHandler : Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler( priority = EventPriority.LOWEST, ignoreCancelled = true )
     fun onMobPickupItem(event: EntityPickupItemEvent) {
         if (event.entity.spawnCategory == SpawnCategory.MONSTER) {
             val entity = event.entity as? LivingEntity ?: return
@@ -43,7 +43,7 @@ class DespawnHandler : Listener {
         }
     }
 
-    @EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
+    @EventHandler( priority = EventPriority.HIGHEST )
     fun onMobSpawn(event: EntityAddToWorldEvent) {
         if (event.entity.spawnCategory != SpawnCategory.MONSTER || event.entity.isDead)
             return
@@ -60,19 +60,15 @@ class DespawnHandler : Listener {
         }
     }
 
-    @EventHandler( priority = EventPriority.LOWEST )
+    @EventHandler( priority = EventPriority.LOWEST, ignoreCancelled = true )
     fun onMobDropItem(event: EntityDropItemEvent) {
-        if (event.isCancelled)
-            return
         event.itemDrop.itemStack.editMeta { pdc ->
             pdc.persistentDataContainer.remove(LetMeDespawn.despMarker!!)
         }
     }
 
-    @EventHandler( priority = EventPriority.LOWEST )
+    @EventHandler( priority = EventPriority.LOWEST, ignoreCancelled = true )
     fun onMobRename(event: PlayerNameEntityEvent) {
-        if (event.isCancelled)
-            return
         event.entity.persistentDataContainer.remove(LetMeDespawn.despMarker!!)
     }
 
