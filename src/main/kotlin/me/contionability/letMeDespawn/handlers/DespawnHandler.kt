@@ -24,8 +24,8 @@ class DespawnHandler : Listener {
 
     @EventHandler( priority = EventPriority.LOWEST, ignoreCancelled = true )
     fun onMobPickupItem(event: EntityPickupItemEvent) {
-        if (event.entity.spawnCategory == SpawnCategory.MONSTER) {
-            val entity = event.entity as? LivingEntity ?: return
+        val entity = event.entity as? LivingEntity ?: return
+        if (entity.spawnCategory == SpawnCategory.MONSTER) {
             event.item.itemStack.editMeta { pdc ->
                 pdc.persistentDataContainer.set(LetMeDespawn.despMarker!!, PersistentDataType.BOOLEAN, true)
             }
@@ -45,13 +45,13 @@ class DespawnHandler : Listener {
 
     @EventHandler( priority = EventPriority.HIGHEST )
     fun onMobSpawn(event: EntityAddToWorldEvent) {
-        if (event.entity.spawnCategory != SpawnCategory.MONSTER || event.entity.isDead)
+        val entity = event.entity as? LivingEntity ?: return
+        if (entity.spawnCategory != SpawnCategory.MONSTER || entity.isDead)
             return
-        if (event.entity.customName() != null) {
-            event.entity.persistentDataContainer.remove(LetMeDespawn.despMarker!!)
+        if (entity.customName() != null) {
+            entity.persistentDataContainer.remove(LetMeDespawn.despMarker!!)
             return
         }
-        val entity = event.entity as? LivingEntity ?: return
         if (entity.persistentDataContainer.get(LetMeDespawn.despMarker!!, PersistentDataType.STRING) != null) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin!!, {
                 dropMarkedItems(entity)
